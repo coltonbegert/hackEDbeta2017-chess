@@ -21,7 +21,8 @@ class State():
     '''
     def update_score(self):
         # TODO implement network for state evaluation
-        self.score = -1
+        # self.score = -1
+        self.score=bad_evaluation(self.board.fen().split()[0])
         return False
 
     '''
@@ -64,6 +65,16 @@ def play():
 
 
 
+def bad_evaluation(fen):
+    b_pieces = "rnbqp"
+    w_pieces = "RNBQP"
+    vals = [5, 3, 3, 9, 1]
+    score = 0
+    for i in range(5):
+        score += fen.count(b_pieces[i]) * vals[i]
+        score -= fen.count(w_pieces[i]) * vals[i]
+    return score
+
 c = 0
 while not board.is_game_over():
     c += 1
@@ -72,9 +83,15 @@ while not board.is_game_over():
         move = i
     # print(move)
     board.push(move)
-    print(board.is_game_over())
-    print(board)
+    f = board.fen().split()[0]
 
-print(c)
+    # print(f.count('r'), f.count('n'), f.count('b'), f.count('q'), f.count('k'), f.count('p'), f.count('R'), f.count('N'), f.count('B'), f.count('Q'), f.count('K'), f.count('P'))
+    print(board)
+    print(bad_evaluation(f))
+
+
+    # print(board.is_game_over())
+
+print("moves: ",c)
 
 

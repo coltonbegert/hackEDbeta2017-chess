@@ -4,8 +4,9 @@ from fenparser import FenParser
 
 class BoardState:
 
-    def __init__(self, board):
+    def __init__(self, board, state_evaluation):
 
+        self.stockfish_evaluation = state_evaluation
         self.side_to_move = board.turn
         #Castling Rights
         self.white_long_castle = board.has_queenside_castling_rights(chess.WHITE)
@@ -111,4 +112,39 @@ class BoardState:
             black_pieces = [(fen_parser.get_piece_at_square(i), i) for i in black_positions]
 
             self.attack_defend_map.push(white_pieces, black_pieces)
+
+    def __repr__(self):
+        string_rep = str(self.side_to_move) + ","
+        string_rep += str(self.white_long_castle) + ","
+        string_rep += str(self.white_short_castle) + ","
+        string_rep += str(self.black_long_castle) + ","
+        string_rep += str(self.black_short_castle) + ","
+
+        string_rep += str(self.white_king_count) + ","
+        string_rep += str(self.white_queen_count) + ","
+        string_rep += str(self.white_bishops_count) + ","
+        string_rep += str(self.white_knight_count) + ","
+        string_rep += str(self.white_pawn_count) + ","
+
+        string_rep += str(self.black_king_count) + ","
+        string_rep += str(self.black_queen_count) + ","
+        string_rep += str(self.black_bishops_count) + ","
+        string_rep += str(self.black_knight_count) + ","
+        string_rep += str(self.black_pawn_count) + ","
+
+        string_rep +=  ",".join(map(lambda x: str(x), self.white_pawns)) + ","
+        string_rep +=  ",".join(map(lambda x: str(x), self.white_rooks)) + ","
+        string_rep +=  ",".join(map(lambda x: str(x), self.white_bishops)) + ","
+        string_rep +=  ",".join(map(lambda x: str(x), self.white_knights)) + ","
+        string_rep +=  ",".join(map(lambda x: str(x), self.white_queen)) + ","
+        string_rep +=  ",".join(map(lambda x: str(x), self.white_king)) + ","
+
+        string_rep +=  ",".join(map(lambda x: str(x), self.black_pawns)) + ","
+        string_rep +=  ",".join(map(lambda x: str(x), self.black_rooks)) + ","
+        string_rep +=  ",".join(map(lambda x: str(x), self.black_bishops)) + ","
+        string_rep +=  ",".join(map(lambda x: str(x), self.black_knights)) + ","
+        string_rep +=  ",".join(map(lambda x: str(x), self.black_queen)) + ","
+        string_rep +=  ",".join(map(lambda x: str(x), self.black_king)) + ","
+        string_rep += repr(self.attack_defend_map)
+
 

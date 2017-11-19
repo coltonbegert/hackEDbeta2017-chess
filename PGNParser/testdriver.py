@@ -1,4 +1,10 @@
 from chessparser import PGNParser
 
-b = PGNParser("c:\\Users\\RyanH\\Development\\hackEDbeta2017-chess\\Test Data\\ficsgamesdb_2016_blitz2000_nomovetimes_1509742.pgn")
-datum = b.parse_next_game()
+b = PGNParser("c:\\Users\\RyanH\Development\\hackEDbeta2017-chess\\Test Data\\lichess_db_standard_rated_2017-10.pgn")
+
+datums = []
+
+while(True):
+    datum = b.parse_next_game()
+    if not datum is None:
+        datums.append(datum)

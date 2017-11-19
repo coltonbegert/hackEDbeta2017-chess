@@ -12,14 +12,25 @@ class PGNParser:
         IT'S A DOCSTRING NOW
         """
         game = chess.pgn.read_game(self.pgn)
+        if game is None:
+            raise ValueError("End of file")
         board = game.board()
-    
-        #Select a random game state
-        stop = randint(1, len(list(game.main_line())))
-        for idx, move in enumerate(game.main_line()):
-            if(idx == stop):
-                break
-            board.push(move)
 
-        return BoardState(board)
+        if len(list(game.main_line())) <= 1:
+            return None
+
+        stop = randint(1, len(list(game.main_line())))
+        node = game
+        while stop != 0:
+            stop -= 1
+            next_node = node.variations[0]
+
+            if next_node.comment.find("eval") == -1:
+                return None
+            board.push(next_node.move)
+            node = next_node
+
+        state_evaluation = float(node.comment.split(']')[0].replace('[%eval ', '').replace("#", ""))
+
+        return BoardState(board, state_evaluation)
 

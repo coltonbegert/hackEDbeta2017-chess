@@ -1,6 +1,7 @@
 import chess
 import time
 import threading
+from web import chessboard
 from controller.midifighterio import MidiFighterIO
 from chessengine import ChessEngine
 
@@ -102,7 +103,7 @@ def main():
     game = Game()
     game.start()
     mf_io = MidiFighterIO()
-
+    chessboard.app.run()
     while game.alive():
         mf_io.send_board_state(game.get_board())
         game.print_update()

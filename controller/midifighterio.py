@@ -69,7 +69,7 @@ class MidiFighterIO():
 
         self.push()
 
-    def send_piece_selected(self,board,attacks):
+    def send_piece_selected(self, board, coords, attacks):
         # dont look at This
         bad = set()
         for piece in board.piece_map().items():
@@ -79,7 +79,7 @@ class MidiFighterIO():
                 self.board.set((7-y, x), ['7f', '00', '00'])
             else:
                 self.board.set((7-y, x), ['00', '7f', '00'])
-
+        self.board.set((7-coords[0], coords[1]), ['00', '00', '7f'])
         self.push()
     def push(self):
         for midi_line in self.get_midi():

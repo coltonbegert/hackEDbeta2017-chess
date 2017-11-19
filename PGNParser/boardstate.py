@@ -4,8 +4,9 @@ from fenparser import FenParser
 
 class BoardState:
 
-    def __init__(self, board):
+    def __init__(self, board, state_evaluation):
 
+        self.stockfish_evaluation = state_evaluation
         self.side_to_move = board.turn
         #Castling Rights
         self.white_long_castle = board.has_queenside_castling_rights(chess.WHITE)
@@ -15,8 +16,6 @@ class BoardState:
 
         #Material Counts
         self.set_material_values(board)
-
-        self.set_sliding_mobilities(board)
 
         self.set_attack_defend_maps(board)
 
@@ -37,12 +36,14 @@ class BoardState:
         black_pawns = board.pieces(chess.PAWN, chess.BLACK)
         
         #Material Counts
+        self.white_king_count = len(white_king)
         self.white_queen_count = len(white_queen)
         self.white_rook_count = len(white_rooks)
         self.white_bishops_count = len(white_bishops)
         self.white_knight_count = len(white_knights)
         self.white_pawn_count = len(white_pawns)
 
+        self.black_king_count = len(black_king)
         self.black_queen_count = len(black_queen)
         self.black_rook_count = len(black_rooks)
         self.black_bishops_count = len(black_bishops)
@@ -70,6 +71,10 @@ class BoardState:
         while(len(self.white_queen) < 1):
             self.white_queen.append(0)
 
+        self.white_king = list(map(lambda x: x, white_king))
+        while(len(self.white_king) < 1):
+            self.white_king.append(0)
+
 
         self.black_pawns = list(map(lambda x: x, black_pawns))
         while(len(self.black_pawns) < 8):
@@ -91,8 +96,10 @@ class BoardState:
         while(len(self.black_queen) < 1):
             self.black_queen.append(0)
 
-    def set_sliding_mobilities(self, board):
-        pass
+        self.black_king = list(map(lambda x: x, black_king))
+        while(len(self.black_king) < 1):
+            self.black_king.append(0)
+
 
     def set_attack_defend_maps(self, board):
         self.attack_defend_map = AttackDefendMap(board.turn)
@@ -105,4 +112,39 @@ class BoardState:
             black_pieces = [(fen_parser.get_piece_at_square(i), i) for i in black_positions]
 
             self.attack_defend_map.push(white_pieces, black_pieces)
+
+    def __repr__(self):
+        string_rep = str(self.side_to_move) + ","
+        string_rep += str(self.white_long_castle) + ","
+        string_rep += str(self.white_short_castle) + ","
+        string_rep += str(self.black_long_castle) + ","
+        string_rep += str(self.black_short_castle) + ","
+
+        string_rep += str(self.white_king_count) + ","
+        string_rep += str(self.white_queen_count) + ","
+        string_rep += str(self.white_bishops_count) + ","
+        string_rep += str(self.white_knight_count) + ","
+        string_rep += str(self.white_pawn_count) + ","
+
+        string_rep += str(self.black_king_count) + ","
+        string_rep += str(self.black_queen_count) + ","
+        string_rep += str(self.black_bishops_count) + ","
+        string_rep += str(self.black_knight_count) + ","
+        string_rep += str(self.black_pawn_count) + ","
+
+        string_rep +=  ",".join(map(lambda x: str(x), self.white_pawns)) + ","
+        string_rep +=  ",".join(map(lambda x: str(x), self.white_rooks)) + ","
+        string_rep +=  ",".join(map(lambda x: str(x), self.white_bishops)) + ","
+        string_rep +=  ",".join(map(lambda x: str(x), self.white_knights)) + ","
+        string_rep +=  ",".join(map(lambda x: str(x), self.white_queen)) + ","
+        string_rep +=  ",".join(map(lambda x: str(x), self.white_king)) + ","
+
+        string_rep +=  ",".join(map(lambda x: str(x), self.black_pawns)) + ","
+        string_rep +=  ",".join(map(lambda x: str(x), self.black_rooks)) + ","
+        string_rep +=  ",".join(map(lambda x: str(x), self.black_bishops)) + ","
+        string_rep +=  ",".join(map(lambda x: str(x), self.black_knights)) + ","
+        string_rep +=  ",".join(map(lambda x: str(x), self.black_queen)) + ","
+        string_rep +=  ",".join(map(lambda x: str(x), self.black_king)) + ","
+        string_rep += repr(self.attack_defend_map)
+        return string_rep
 

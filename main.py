@@ -5,11 +5,14 @@ from web import chessboard
 from controller.midifighterio import MidiFighterIO
 from chessengine import ChessEngine
 
+
 class Game(threading.Thread):
     def __init__(self, board=chess.Board()):
         threading.Thread.__init__(self)
         self.board = board
         self.engine = ChessEngine()
+        self.web= chessboard.Web()
+        self.web.start()
     def run(self):
         while self.alive():
            time.sleep(0.1)
@@ -30,9 +33,24 @@ class Game(threading.Thread):
 
     def print_update(self):
         print(self.board)
+        self.web.update_board(self.board.fen())
 
     def get_engine_update(self):
+        san_board = self.board.copy()
+        move_list = []
+        while True:
+            try:
+                move = san_board.pop()
+                move_list.append(move)
+                # print(move_list)
+            except Exception as e:
+                break
+        move_list.reverse()
+        # print(move_list)
+        san = san_board.variation_san(move_list)
+        print(san)
         move = self.engine.get_best_move(self.board.fen())
+
         self.board.push_uci(move)
         print(move)
         self.print_update()
@@ -103,21 +121,32 @@ def main():
     game = Game()
     game.start()
     mf_io = MidiFighterIO()
-    chessboard.app.run()
-    while game.alive():
-        mf_io.send_board_state(game.get_board())
-        game.print_update()
-        square_coords = mf_io.get_square()
-        attacks = game.press_query(square_coords)
-        if attacks is None:
-            continue
-        mf_io.send_piece_selected(game.board, attacks)
-        target_coords = mf_io.get_square()
-        confirm = game.press_confirm(square_coords, target_coords)
-        if not confirm:
-            continue
-        mf_io.send_board_state(game.get_board())
-        game.get_engine_update()
+    # web = chessboard.Web()
+    # web.start()
+
+    # threading.start_new_thread(chessboard.flaskthread,())
+    while True:
+        game.board.reset()
+        # game.start()
+        while game.alive():
+            mf_io.send_board_state(game.get_board())
+            game.print_update()
+            square_coords = mf_io.get_square()
+            attacks = game.press_query(square_coords)
+            if attacks is None:
+                continue
+            mf_io.send_piece_selected(game.board, attacks)
+            target_coords = mf_io.get_square()
+            confirm = game.press_confirm(square_coords, target_coords)
+            if not confirm:
+                continue
+            mf_io.send_board_state(game.get_board())
+            game.get_engine_update()
+            mf_io.send_board_state(game.get_board())
+
+        print(game.board.result())
+        mf_io.send_loser(game.board)
+        mf_io.get_square()
 
 
 

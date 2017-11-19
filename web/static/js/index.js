@@ -19,8 +19,9 @@ window.onload = function() {
 }
 
 $(document).ready(function(){
-    var socket = io.connect('http://' + document.domain + ':' + location.port + '/test');
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
     socket.on('fen', function(msg) {
-        chessboard.apply_state(msg);
+        console.log(msg);
+        chessboard.apply_state(msg['data']);
     });
 });

@@ -85,3 +85,14 @@ class MidiFighterIO():
         for midi_line in self.get_midi():
             msg = mido.Message.from_bytes(bytearray.fromhex(midi_line))
             self.output.send(msg)
+
+    def send_loser(self, board):
+        if board.result() == "0-1":
+            for piece in board.piece_map().items():
+                if piece[1].color:
+                    self.board.set(self.square_to_coords(piece[0]), ['7f', '00', '00'])
+        elif board.result() == "1-0":
+            for piece in board.piece_map().items():
+                if not piece[1].color:
+                    self.board.set(self.square_to_coords(piece[0]), ['7f', '00', '00'])
+        self.push()

@@ -42,3 +42,46 @@ class BoardState:
         self.black_knight_count = len(black_knights)
         self.black_pawn_count = len(black_pawns)
 
+        #Material locations
+        self.white_pawns = list(map(lambda x: x, white_pawns))
+        while(len(self.white_pawns) < 8):
+            self.white_pawns.append(0)
+
+        self.white_rooks = list(map(lambda x: x, white_rooks))
+        while(len(self.white_rooks) < 2):
+            self.white_rooks.append(0)
+
+        self.white_bishops = list(map(lambda x: x, white_bishops))
+        while(len(self.white_bishops) < 2):
+            self.white_bishops.append(0)
+
+        self.white_knights = list(map(lambda x: x, white_knights))
+        while(len(self.white_knights) < 2):
+            self.white_knights.append(0)
+
+        self.white_queen = list(map(lambda x: x, white_queen))
+        while(len(self.white_queen) < 1):
+            self.white_queen.append(0)
+
+
+        self.black_pawns = list(map(lambda x: x, black_pawns))
+        while(len(self.black_pawns) < 8):
+            self.black_pawns.append(0)
+
+        self.black_rooks = list(map(lambda x: x, black_rooks))
+        while(len(self.black_rooks) < 2):
+            self.black_rooks.append(0)
+
+        self.black_bishops = list(map(lambda x: x, black_bishops))
+        while(len(self.black_bishops) < 2):
+            self.black_bishops.append(0)
+
+        self.black_knights = list(map(lambda x: x, black_knights))
+        while(len(self.black_knights) < 2):
+            self.black_knights.append(0)
+
+        self.black_queen = list(map(lambda x: x, black_queen))
+        while(len(self.black_queen) < 1):
+            self.black_queen.append(0)
+
+

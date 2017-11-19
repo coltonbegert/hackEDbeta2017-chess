@@ -48,7 +48,7 @@ class MidiFighterIO():
         block = self.build_msg_block(lines, '01') + self.build_msg_block(lines, '02')
         block.insert(0, DEFAULT_SETTINGS)
         return block
-    
+
     def send_board_state(self, board):
         # where board is a chess.Board
         bad = set()
@@ -63,6 +63,12 @@ class MidiFighterIO():
                 # print(i)
                 self.board.set(self.square_to_coords(i), ['00', '00', '00'])
 
+
+        self.push()
+
+    def send_piece_selected(self, attacks):
+        for x,y in attacks:
+            self.board.set((7-y, x), ['7f', '00', '00'])
 
         self.push()
 

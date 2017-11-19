@@ -106,7 +106,7 @@ def main():
         square_coords = mf_io.get_square()
         attacks = game.press_query(square_coords)
         print(attacks)
-        # draw attacks
+        mf_io.send_piece_selected(attacks)
         target_coords = mf_io.get_square()
         game.press_confirm(square_coords, target_coords)
         mf_io.send_board_state(game.get_board())

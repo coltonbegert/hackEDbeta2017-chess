@@ -146,5 +146,5 @@ class BoardState:
         string_rep +=  ",".join(map(lambda x: str(x), self.black_queen)) + ","
         string_rep +=  ",".join(map(lambda x: str(x), self.black_king)) + ","
         string_rep += repr(self.attack_defend_map)
-
+        return string_rep
 

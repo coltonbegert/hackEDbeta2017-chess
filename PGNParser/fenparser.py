@@ -2,6 +2,15 @@ import chess
 
 class FenParser:
 
+    NORTH = 0
+    NORTHWEST = 1
+    WEST = 2
+    SOUTHWEST = 3
+    SOUTH = 4
+    SOUTHEAST = 5
+    EAST = 6
+    NORTHEAST = 7
+
     pieces = {'p': chess.PAWN, 'r': chess.ROOK, 'b': chess.BISHOP, 'n': chess.KNIGHT, 'q': chess.QUEEN, 'k': chess.KING}
     def __init__(self, fen):
         self.fen = fen

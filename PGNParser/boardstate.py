@@ -16,8 +16,6 @@ class BoardState:
         #Material Counts
         self.set_material_values(board)
 
-        self.set_sliding_mobilities(board)
-
         self.set_attack_defend_maps(board)
 
 
@@ -37,12 +35,14 @@ class BoardState:
         black_pawns = board.pieces(chess.PAWN, chess.BLACK)
         
         #Material Counts
+        self.white_king_count = len(white_king)
         self.white_queen_count = len(white_queen)
         self.white_rook_count = len(white_rooks)
         self.white_bishops_count = len(white_bishops)
         self.white_knight_count = len(white_knights)
         self.white_pawn_count = len(white_pawns)
 
+        self.black_king_count = len(black_king)
         self.black_queen_count = len(black_queen)
         self.black_rook_count = len(black_rooks)
         self.black_bishops_count = len(black_bishops)
@@ -70,6 +70,10 @@ class BoardState:
         while(len(self.white_queen) < 1):
             self.white_queen.append(0)
 
+        self.white_king = list(map(lambda x: x, white_king))
+        while(len(self.white_king) < 1):
+            self.white_king.append(0)
+
 
         self.black_pawns = list(map(lambda x: x, black_pawns))
         while(len(self.black_pawns) < 8):
@@ -91,8 +95,10 @@ class BoardState:
         while(len(self.black_queen) < 1):
             self.black_queen.append(0)
 
-    def set_sliding_mobilities(self, board):
-        pass
+        self.black_king = list(map(lambda x: x, black_king))
+        while(len(self.black_king) < 1):
+            self.black_king.append(0)
+
 
     def set_attack_defend_maps(self, board):
         self.attack_defend_map = AttackDefendMap(board.turn)

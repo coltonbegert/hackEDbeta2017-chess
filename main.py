@@ -55,7 +55,7 @@ class Game(threading.Thread):
             # possible_attacks = find_attacks(board_piece)
             # for i in get_moves(board, square):
             possible_attacks = get_moves(self.board, square)
-            return [(chess.square_file(s), chess.square_rank(s)) for s in possible_attacks ]
+            return [(chess.square_file(s), chess.square_rank(s)) for s in possible_attacks]
 
     def press_confirm(self, source_coords, target_coords):
         print("press confirm:", source_coords, target_coords)
@@ -108,6 +108,8 @@ def main():
         game.print_update()
         square_coords = mf_io.get_square()
         attacks = game.press_query(square_coords)
+        if attacks is None:
+            continue
         print(attacks)
         mf_io.send_piece_selected(attacks)
         target_coords = mf_io.get_square()

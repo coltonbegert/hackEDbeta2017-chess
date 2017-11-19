@@ -13,6 +13,10 @@ class BoardState:
         #Material Counts
         self.set_material_values(board)
 
+        self.set_sliding_mobilities(board)
+
+        self.set_attack_defend_maps(board)
+
 
     def set_material_values(self, board):
         white_queen = board.pieces(chess.QUEEN, chess.WHITE)
@@ -84,4 +88,8 @@ class BoardState:
         while(len(self.black_queen) < 1):
             self.black_queen.append(0)
 
+    def set_sliding_mobilities(self, board):
+        pass
 
+    def set_attack_defend_maps(self, board):
+        pass

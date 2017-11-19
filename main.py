@@ -39,7 +39,6 @@ class Game(threading.Thread):
     def play_move(self, move):
         self.board.push(move)
         self.print_update()
-        self.get_engine_update()
 
 
     def move(self, source, dest):
@@ -59,8 +58,11 @@ class Game(threading.Thread):
             return [(chess.square_file(s), chess.square_rank(s)) for s in possible_attacks ]
 
     def press_confirm(self, source_coords, target_coords):
-        from_file, from_rank = source_coords
-        to_file, to_rank = target_coords
+        print("press confirm:", source_coords, target_coords)
+        # from_file, from_rank = source_coords
+        # to_file, to_rank = target_coords
+        from_rank, from_file = source_coords
+        to_rank, to_file = target_coords
         square = chess.square(from_file, from_rank)
         next_attack = chess.square(to_file, to_rank)
         if next_attack in self.get_moves(square):
@@ -107,6 +109,9 @@ def main():
         # draw attacks
         target_coords = mf_io.get_square()
         game.press_confirm(square_coords, target_coords)
+        mf_io.send_board_state(game.get_board())
+        game.get_engine_update()
+
 
 
 if __name__ == '__main__':

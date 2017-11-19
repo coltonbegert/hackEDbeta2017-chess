@@ -1,8 +1,8 @@
 import mido
 from queue import Queue
 
-from midiboard import MIDIBoard
-from constants import *
+from .midiboard import MIDIBoard
+from .constants import *
 
 class MidiFighterIO():
     def __init__(self):
@@ -10,6 +10,19 @@ class MidiFighterIO():
         self.input = mido.open_input('Midi Fighter 64')
         self.output = mido.open_output('Midi Fighter 64')
         # self.draw_queue = Queue()
+
+    def get_button_press(self):
+        # flush
+        list(self.input.iter_pending())
+
+        button_data = self.input.receive()
+        while not button_data.hex().startswith(MIDI_NOTE_OFF):
+            button_data = self.input.receive()
+        return button_data.hex().split()[1]
+
+    def get_square(self):
+        button_byte = self.get_button_press()
+        return BOARD_BYTE_TO_COORDS[button_byte]
 
     def build_msg_block(self, lines, half='01'):
         # lines is 8 lines long, please
@@ -30,6 +43,16 @@ class MidiFighterIO():
         block = self.build_msg_block(lines, '01') + self.build_msg_block(lines, '02')
         block.insert(0, DEFAULT_SETTINGS)
         return block
+
+    def send_board_state(self, board):
+        # where board is a chess.Board
+        for piece in board.piece_map().items():
+            if piece[1].color: # white
+                self.board.set(piece[0], ['7f', '7f', '7f'])
+            else:
+                # self.board.set(piece[0], ['22', '07', '2c'])
+                self.board.set(piece[0], ['2f', '00', '17'])
+        self.push()
 
     def push(self):
         for midi_line in self.get_midi():

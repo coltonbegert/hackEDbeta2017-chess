@@ -11,6 +11,11 @@ class MidiFighterIO():
         self.output = mido.open_output('Midi Fighter 64')
         # self.draw_queue = Queue()
 
+    def square_to_coords(self, coord):
+        if isinstance(coord, list) or isinstance(coord, tuple):
+            return coord
+        return (7-(coord//8), coord%8)
+
     def get_button_press(self):
         # flush
         list(self.input.iter_pending())
@@ -22,7 +27,7 @@ class MidiFighterIO():
 
     def get_square(self):
         button_byte = self.get_button_press()
-        return BOARD_BYTE_TO_COORDS[button_byte]
+        return self.square_to_coords(BOARD_BYTE_TO_COORDS[button_byte])
 
     def build_msg_block(self, lines, half='01'):
         # lines is 8 lines long, please
@@ -48,10 +53,9 @@ class MidiFighterIO():
         # where board is a chess.Board
         for piece in board.piece_map().items():
             if piece[1].color: # white
-                self.board.set(piece[0], ['7f', '7f', '7f'])
+                self.board.set(self.square_to_coords(piece[0]), ['7f', '7f', '7f'])
             else:
-                # self.board.set(piece[0], ['22', '07', '2c'])
-                self.board.set(piece[0], ['2f', '00', '17'])
+                self.board.set(self.square_to_coords(piece[0]), ['2f', '00', '17'])
         self.push()
 
     def push(self):

@@ -1,15 +1,18 @@
 import chess
 import time
 import threading
-# from controller.midifighterio import MidiFighterIO
+from controller.midifighterio import MidiFighterIO
 
 class Game(threading.Thread):
     def __init__(self, board=chess.Board()):
         threading.Thread.__init__(self)
         self.board = board
     def run(self):
-        while not self.board.is_game_over():
+        while self.alive():
            time.sleep(0.1)
+
+    def alive(self):
+        return not self.board.is_game_over()
 
     def get_board(self):
         return self.board
@@ -21,7 +24,7 @@ class Game(threading.Thread):
             if move.from_square == source:
                 moves.append(move.to_square)
         return moves
-    
+
     def print_update(self):
         print(self.board)
 
@@ -34,7 +37,8 @@ class Game(threading.Thread):
             if move.from_square == source and move.to_square == dest:
                 return move
 
-    def press_query(self, file_index, rank_index):
+    def press_query(self, coords):
+        rank_index, file_index = coords
         square = chess.square(file_index, rank_index)
         # color = board.piece_at(square).color
         board_piece = self.board.piece_at(square)
@@ -44,13 +48,15 @@ class Game(threading.Thread):
             possible_attacks = get_moves(self.board, square)
             return [(chess.square_file(s), chess.square_rank(s)) for s in possible_attacks ]
 
-    def press_confirm(self, from_file, from_rank, to_file, to_rank):
+    def press_confirm(self, source_coords, target_coords):
+        from_file, from_rank = source_coords
+        to_file, to_rank = target_coords
         square = chess.square(from_file, from_rank)
         next_attack = chess.square(to_file, to_rank)
         if next_attack in self.get_moves(square):
             self.play_move(chess.Move(square, next_attack))
-    
-        
+
+
 
 def get_state():
     pass
@@ -80,9 +86,17 @@ def move(board, source, dest):
 def main():
     game = Game()
     game.start()
-    game.print_update()
-    print(game.press_query(1,1))
-    game.press_confirm(1,1,1,2)
+    mf_io = MidiFighterIO()
+
+    while game.alive():
+        mf_io.send_board_state(game.get_board())
+        game.print_update()
+        square_coords = mf_io.get_square()
+        attacks = game.press_query(square_coords)
+        print(attacks)
+        # draw attacks
+        target_coords = mf_io.get_square()
+        game.press_confirm(square_coords, target_coords)
 
 
 if __name__ == '__main__':
@@ -104,7 +118,7 @@ if __name__ == '__main__':
 #         # possible_attacks = find_attacks(board_piece)
 #         # for i in get_moves(board, square):
 #         possible_attacks = get_moves(board, square)
-            
+
 #         mf_io.send_piece_selected(next_piece['coords'], possible_attacks)
 
 #         next_file, next_rank = mf_io.get_square()

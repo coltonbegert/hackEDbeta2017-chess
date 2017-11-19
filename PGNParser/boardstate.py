@@ -143,6 +143,6 @@ class BoardState:
         item_list += self.black_queen
         item_list += self.black_king
         item_list += self.attack_defend_map.toList()
-        item_list += self.stockfish_evaluation
+        item_list.append(self.stockfish_evaluation)
         return ','.join(str(x) for x in item_list) 
 

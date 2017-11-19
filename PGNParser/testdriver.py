@@ -1,6 +1,6 @@
 from chessparser import PGNParser
 
-gameSet = PGNParser("c:\\Users\\RyanH\Development\\hackEDbeta2017-chess\\Test Data\\lichess_db_standard_rated_2017-10.pgn")
+gameSet = PGNParser("c:\\Users\\RyanH\Development\\hackEDbeta2017-chess\\Test Data\\lichess_db_standard_rated_2014-02.pgn")
 
 write_file = "datums.csv"
 with open(write_file, "w") as output:

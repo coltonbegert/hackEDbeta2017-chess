@@ -1,0 +1,13 @@
+body {
+    background-color: #FDFDFD;
+}
+
+.aligner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chessboard {
+    width: 800px
+}

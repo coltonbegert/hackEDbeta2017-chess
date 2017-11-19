@@ -1,4 +1,7 @@
 import chess
+from attdefmap import AttackDefendMap
+from fenparser import FenParser
+
 class BoardState:
 
     def __init__(self, board):
@@ -92,4 +95,14 @@ class BoardState:
         pass
 
     def set_attack_defend_maps(self, board):
-        pass
+        self.attack_defend_map = AttackDefendMap(board.turn)
+
+        for x in range(0, 63):
+            white_positions = board.attackers(chess.WHITE, x)
+            black_positions = board.attackers(chess.BLACK, x)
+            fen_parser = FenParser(board.fen())
+            white_pieces = [(fen_parser.get_piece_at_square(i), i) for i in white_positions]
+            black_pieces = [(fen_parser.get_piece_at_square(i), i) for i in black_positions]
+
+            self.attack_defend_map.push(white_pieces, black_pieces)
+

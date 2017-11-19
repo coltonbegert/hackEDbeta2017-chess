@@ -15,3 +15,7 @@ def send_img(path):
 
 def send_fen(fen):
     emit('fen', {'data': fen}, broadcast=True)
+
+
+if __name__ == '__main__':
+    app.run()

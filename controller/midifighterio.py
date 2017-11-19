@@ -1,4 +1,4 @@
-import mido
+import mido, chess
 from queue import Queue
 
 from .midiboard import MIDIBoard
@@ -58,6 +58,9 @@ class MidiFighterIO():
                 self.board.set(self.square_to_coords(piece[0]), ['7f', '7f', '7f'])
             else:
                 self.board.set(self.square_to_coords(piece[0]), ['2f', '00', '17'])
+            if board.is_check() and piece[1].symbol() == 'K':
+                self.board.set(self.square_to_coords(piece[0]), ['7f', '7f', '00'])
+
         for i in range(64):
             if i not in bad:
                 # print(i)
@@ -66,12 +69,18 @@ class MidiFighterIO():
 
         self.push()
 
-    def send_piece_selected(self, attacks):
+    def send_piece_selected(self,board,attacks):
+        # dont look at This
+        bad = set()
+        for piece in board.piece_map().items():
+            bad.add(self.square_to_coords(piece[0]))
         for x,y in attacks:
-            self.board.set((7-y, x), ['7f', '00', '00'])
+            if ((7-y), x) in bad:
+                self.board.set((7-y, x), ['7f', '00', '00'])
+            else:
+                self.board.set((7-y, x), ['00', '7f', '00'])
 
         self.push()
-
     def push(self):
         for midi_line in self.get_midi():
             msg = mido.Message.from_bytes(bytearray.fromhex(midi_line))

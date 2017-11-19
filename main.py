@@ -110,8 +110,7 @@ def main():
         attacks = game.press_query(square_coords)
         if attacks is None:
             continue
-        print(attacks)
-        mf_io.send_piece_selected(attacks)
+        mf_io.send_piece_selected(game.board, attacks)
         target_coords = mf_io.get_square()
         confirm = game.press_confirm(square_coords, target_coords)
         if not confirm:

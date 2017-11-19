@@ -1,12 +1,14 @@
 import chess
 import time
 import threading
+from chessengine import ChessEngine
 # from controller.midifighterio import MidiFighterIO
 
 class Game(threading.Thread):
     def __init__(self, board=chess.Board()):
         threading.Thread.__init__(self)
         self.board = board
+        self.engine = ChessEngine()
     def run(self):
         while not self.board.is_game_over():
            time.sleep(0.1)
@@ -25,9 +27,17 @@ class Game(threading.Thread):
     def print_update(self):
         print(self.board)
 
+    def get_engine_update(self):
+        move = self.engine.get_best_move(self.board.fen())
+        self.board.push_uci(move)
+        print(move)
+        self.print_update()
+
     def play_move(self, move):
         self.board.push(move)
         self.print_update()
+        self.get_engine_update()
+        
 
     def move(self, source, dest):
         for move in self.board.legal_moves:

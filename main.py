@@ -51,7 +51,7 @@ class Game(threading.Thread):
         square = chess.square(file_index, rank_index)
         # color = board.piece_at(square).color
         board_piece = self.board.piece_at(square)
-        if board_piece.color == self.board.turn:
+        if board_piece is not None and board_piece.color == self.board.turn:
             # possible_attacks = find_attacks(board_piece)
             # for i in get_moves(board, square):
             possible_attacks = get_moves(self.board, square)
@@ -67,6 +67,9 @@ class Game(threading.Thread):
         next_attack = chess.square(to_file, to_rank)
         if next_attack in self.get_moves(square):
             self.play_move(chess.Move(square, next_attack))
+            return True
+        else:
+            return False
 
 
 
@@ -108,7 +111,9 @@ def main():
         print(attacks)
         mf_io.send_piece_selected(attacks)
         target_coords = mf_io.get_square()
-        game.press_confirm(square_coords, target_coords)
+        confirm = game.press_confirm(square_coords, target_coords)
+        if not confirm:
+            continue
         mf_io.send_board_state(game.get_board())
         game.get_engine_update()
 

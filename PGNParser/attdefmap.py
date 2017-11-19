@@ -25,5 +25,5 @@ class AttackDefendMap:
             self.attack_map.append(min_black[1])
             self.defend_map.append(min_white[1])
 
-    def __repr__(self):
-        return ",".join(map(lambda x: str(x), self.defend_map)) + "," + ",".join(map(lambda x: str(x), self.attack_map))
+    def toList(self):
+        return self.defend_map + self.attack_map

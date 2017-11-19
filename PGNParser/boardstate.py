@@ -114,37 +114,35 @@ class BoardState:
             self.attack_defend_map.push(white_pieces, black_pieces)
 
     def __repr__(self):
-        string_rep = str(self.side_to_move) + ","
-        string_rep += str(self.white_long_castle) + ","
-        string_rep += str(self.white_short_castle) + ","
-        string_rep += str(self.black_long_castle) + ","
-        string_rep += str(self.black_short_castle) + ","
-
-        string_rep += str(self.white_king_count) + ","
-        string_rep += str(self.white_queen_count) + ","
-        string_rep += str(self.white_bishops_count) + ","
-        string_rep += str(self.white_knight_count) + ","
-        string_rep += str(self.white_pawn_count) + ","
-
-        string_rep += str(self.black_king_count) + ","
-        string_rep += str(self.black_queen_count) + ","
-        string_rep += str(self.black_bishops_count) + ","
-        string_rep += str(self.black_knight_count) + ","
-        string_rep += str(self.black_pawn_count) + ","
-
-        string_rep +=  ",".join(map(lambda x: str(x), self.white_pawns)) + ","
-        string_rep +=  ",".join(map(lambda x: str(x), self.white_rooks)) + ","
-        string_rep +=  ",".join(map(lambda x: str(x), self.white_bishops)) + ","
-        string_rep +=  ",".join(map(lambda x: str(x), self.white_knights)) + ","
-        string_rep +=  ",".join(map(lambda x: str(x), self.white_queen)) + ","
-        string_rep +=  ",".join(map(lambda x: str(x), self.white_king)) + ","
-
-        string_rep +=  ",".join(map(lambda x: str(x), self.black_pawns)) + ","
-        string_rep +=  ",".join(map(lambda x: str(x), self.black_rooks)) + ","
-        string_rep +=  ",".join(map(lambda x: str(x), self.black_bishops)) + ","
-        string_rep +=  ",".join(map(lambda x: str(x), self.black_knights)) + ","
-        string_rep +=  ",".join(map(lambda x: str(x), self.black_queen)) + ","
-        string_rep +=  ",".join(map(lambda x: str(x), self.black_king)) + ","
-        string_rep += repr(self.attack_defend_map)
-        return string_rep
+        item_list = []
+        item_list.append(self.side_to_move)
+        item_list.append(self.white_long_castle) 
+        item_list.append(self.white_short_castle)
+        item_list.append(self.black_long_castle) 
+        item_list.append(self.black_short_castle)
+        item_list.append(self.white_king_count) 
+        item_list.append(self.white_queen_count)
+        item_list.append(self.white_bishops_count)
+        item_list.append(self.white_knight_count) 
+        item_list.append(self.white_pawn_count) 
+        item_list.append(self.black_king_count) 
+        item_list.append(self.black_queen_count) 
+        item_list.append(self.black_bishops_count)
+        item_list.append(self.black_knight_count) 
+        item_list.append(self.black_pawn_count) 
+        item_list += self.white_pawns
+        item_list += self.white_rooks
+        item_list += self.white_bishops
+        item_list += self.white_knights
+        item_list += self.white_queen
+        item_list += self.white_king
+        item_list += self.black_pawns
+        item_list += self.black_rooks
+        item_list += self.black_bishops
+        item_list += self.black_knights
+        item_list += self.black_queen
+        item_list += self.black_king
+        item_list += self.attack_defend_map.toList()
+        item_list += self.stockfish_evaluation
+        return ','.join(str(x) for x in item_list) 
 
